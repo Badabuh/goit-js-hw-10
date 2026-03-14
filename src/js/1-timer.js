@@ -7,6 +7,13 @@ const endingTime = document.querySelector('#datetime-picker');
 const startBtn = document.querySelector('button[data-start]');
 
 let selectedTime = null;
+let timerId = null;
+
+function setStartButtonState(isEnabled) {
+  startBtn.disabled = !isEnabled;
+  startBtn.style.color = isEnabled ? 'black' : '#b8b8b8';
+  startBtn.style.border = isEnabled ? '2px solid black' : '2px solid #c6c6c6';
+}
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -39,33 +46,43 @@ const options = {
   onClose(selectedDates) {
     console.log(selectedDates[0]);
     selectedTime = selectedDates[0].getTime();
-    if (selectedTime < Date.now()) {
+    if (selectedTime <= Date.now()) {
       iziToast.error({
         title: 'Error',
         message: 'Please choose a date in the future',
         position: 'topRight',
       });
+      setStartButtonState(false);
       return;
     } else {
-      startBtn.disabled = false;
-      startBtn.style.color = 'black';
-      startBtn.style.border = '2px solid black';
+      setStartButtonState(true);
     }
   },
 };
+
+setStartButtonState(false);
+
 startBtn.addEventListener('click', () => {
-  const timerId = setInterval(() => {
+  if (!selectedTime || timerId) {
+    return;
+  }
+
+  setStartButtonState(false);
+  endingTime.disabled = true;
+
+  timerId = setInterval(() => {
     const currentTime = Date.now();
     const deltaTime = selectedTime - currentTime;
+
     if (deltaTime <= 0) {
       clearInterval(timerId);
+      timerId = null;
       selectedTime = null;
-      startBtn.disabled = false;
-      startBtn.style.color = 'black';
-      startBtn.style.border = '2px solid black';
+      setStartButtonState(false);
       endingTime.disabled = false;
       return;
     }
+
     const { days, hours, minutes, seconds } = convertMs(deltaTime);
     document.querySelector('.value[data-days]').textContent =
       addLeadingZero(days);
@@ -75,10 +92,6 @@ startBtn.addEventListener('click', () => {
       addLeadingZero(minutes);
     document.querySelector('.value[data-seconds]').textContent =
       addLeadingZero(seconds);
-    startBtn.disabled = true;
-    startBtn.style.color = '#b8b8b8';
-    startBtn.style.border = '2px solid #c6c6c6';
-    endingTime.disabled = true;
   }, 1000);
 });
 
