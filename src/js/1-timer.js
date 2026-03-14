@@ -5,6 +5,10 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 const endingTime = document.querySelector('#datetime-picker');
 const startBtn = document.querySelector('button[data-start]');
+const daysValue = document.querySelector('.value[data-days]');
+const hoursValue = document.querySelector('.value[data-hours]');
+const minutesValue = document.querySelector('.value[data-minutes]');
+const secondsValue = document.querySelector('.value[data-seconds]');
 
 let selectedTime = null;
 let timerId = null;
@@ -84,14 +88,10 @@ startBtn.addEventListener('click', () => {
     }
 
     const { days, hours, minutes, seconds } = convertMs(deltaTime);
-    document.querySelector('.value[data-days]').textContent =
-      addLeadingZero(days);
-    document.querySelector('.value[data-hours]').textContent =
-      addLeadingZero(hours);
-    document.querySelector('.value[data-minutes]').textContent =
-      addLeadingZero(minutes);
-    document.querySelector('.value[data-seconds]').textContent =
-      addLeadingZero(seconds);
+    daysValue.textContent = addLeadingZero(days);
+    hoursValue.textContent = addLeadingZero(hours);
+    minutesValue.textContent = addLeadingZero(minutes);
+    secondsValue.textContent = addLeadingZero(seconds);
   }, 1000);
 });
 
