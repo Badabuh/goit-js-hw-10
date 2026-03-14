@@ -1,0 +1,1 @@
+.form>label{display:flex;flex-direction:column}.form>label>input{margin-top:.5rem;font-size:1rem;max-width:200px}.form>button{margin-top:1rem;font-size:1rem;width:200px}.form>fieldset{margin-top:1rem;padding:0;max-width:200px}.form>fieldset>label{margin-right:.5rem;font-size:18px}
